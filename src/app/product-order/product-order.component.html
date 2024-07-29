@@ -1,0 +1,61 @@
+<form [formGroup]="orderForm" (ngSubmit)="showOrder()" class="order-form">
+  <mat-card class="order-card">
+    <mat-card-title class="order-card-title">Product Order List</mat-card-title>
+    <div formArrayName="products" class="product-list">
+      <div *ngFor="let productControl of productControls; let i = index" [formGroupName]="i" class="product-group">
+        <mat-form-field appearance="fill" class="product-field">
+          <mat-label>Product</mat-label>
+          <mat-select formControlName="product" (selectionChange)="onProductChange($event, i)">
+            <mat-option value="" disabled>Choose Product</mat-option>
+            <mat-option *ngFor="let product of products" [value]="product">{{ product }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="mat-fild">
+          <mat-form-field appearance="fill" class="quantity-field">
+            <mat-label>Quantity</mat-label>
+            <mat-select formControlName="quantity" (selectionChange)="onQuantityChange($event, i)">
+              <mat-option value="" disabled>Choose Quantity</mat-option>
+              <mat-option *ngFor="let quantity of quantities" [value]="quantity">{{ quantity }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-icon-button color="primary" type="button" class="add-more-btn" (click)="addProduct(i)">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-buttons">
+      <button mat-raised-button color="primary" type="submit" class="single-btn">Show Order</button>
+    </div>
+  </mat-card>
+</form>
+
+<div class="loader-overlay" *ngIf="isLoading">
+  <div class="loader"></div>
+</div>
+
+<ng-template #orderModal>
+  <h2 mat-dialog-title>Order List</h2>
+  <mat-dialog-content>
+    <table mat-table [dataSource]="order" class="order-table">
+      <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let item">{{ item.product }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['product', 'quantity']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['product', 'quantity']"></tr>
+    </table>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button color="accent" type="button" (click)="readOrder()">What is my Order?</button>
+  </mat-dialog-actions>
+</ng-template>

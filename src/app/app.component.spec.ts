@@ -1,10 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [
+        AppComponent,
+        BrowserAnimationsModule
+      ],
     }).compileComponents();
   });
 
@@ -20,10 +24,12 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('product-order-list');
   });
 
-  it('should render title', () => {
+
+  it('should call the method "someMethod" when "someAction" is triggered', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, product-order-list');
+    const app = fixture.componentInstance;
+    spyOn(app, 'someMethod').and.callThrough();
+    app.someAction(); 
+    expect(app.someMethod).toHaveBeenCalled();
   });
 });
